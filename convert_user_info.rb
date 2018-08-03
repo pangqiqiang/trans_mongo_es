@@ -87,5 +87,6 @@ File.open(file_input, "r") do |fin|
 		fin.each do |line|
 			do_each_row.call(fin, fout, line)
 		end
+		SQLDB.create_index
 	end
 end

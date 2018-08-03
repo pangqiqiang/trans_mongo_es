@@ -11,8 +11,6 @@ class MyDB
 		@db.execute <<-SQL
 			CREATE TABLE IF NOT EXISTS #{table_name}
 			(id TEXT PRIMARY KEY   NOT NULL, report_id TEXT, uid TEXT);
-			CREATE UNIQUE INDEX ID_INDEX ON #{table_name} (id);
-			CREATE INDEX UID_INDEX ON #{table_name} (uid)
 		SQL
 	end
 
@@ -28,5 +26,12 @@ class MyDB
 
 	def fetch_from_uid(uid)
 		@db.execute("SELECT report_id FROM #{@table_name} WHERE uid=?", uid)[0][0] rescue nil
+	end
+
+	def create_index
+		@db.execute <<-SQL
+			CREATE UNIQUE INDEX ID_INDEX ON #{@table_name} (id);
+			CREATE INDEX UID_INDEX ON #{@table_name} (uid);
+		SQL
 	end
 end
