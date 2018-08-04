@@ -6,22 +6,26 @@ require 'json'
 require 'time'
 require './common_funcs'
 require './sqlite_treat'
+require './es_handler'
 file_input = "/tmp/user_info.json"
-file_output = "/tmp/user_info_out.json"
+INDEX = "test_user_info"
+TYPE = "history"
 SQLDB = MyDB.new("ids.db", "id_pairs")
+ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 
-do_each_row = Proc.new do |fin, fout, line|
+do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
-	output_hash["report_id"] = fin.lineno
-	output_hash["_id"] = output_hash["report_id"]
 	output_hash["old_id"] = input_hash["_id"]
 #忽略身份证号不存在记录
 	next unless output_hash["old_id"].kind_of? String
+	#插入id获取es主键_id值
+	report_id = ES_DB.store(INDEX, TYPE, output_hash)
+	output_hash["report_id"] = report_id
 	output_hash["puid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 #维护report_id, id, uid映射关系
-	SQLDB.store(output_hash["old_id"], output_hash["report_id"], output_hash["puid"])
+	SQLDB.store(output_hash["old_id"], report_id, output_hash["puid"])
 	output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 	output_hash["system_type"] = hash_link(input_hash, ["l_business_system", 0, "c_system_name"])
 	output_hash["user_name"] = hash_link(input_hash, ["c_base_info","c_user_name"])
@@ -76,17 +80,13 @@ do_each_row = Proc.new do |fin, fout, line|
 		output_hash["mobile_analysis_upd_tm"])
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
-
 	output_hash["update_time"] = Time.now.to_i
-#写入json
-	fout.puts(output_hash.to_json)
+	ES_DB.update(INDEX, TYPE, report_id, output_hash)
 end
 
 File.open(file_input, "r") do |fin|
-	File.open(file_output, "w") do |fout|
-		fin.each do |line|
-			do_each_row.call(fin, fout, line)
-		end
-		SQLDB.create_index
+	fin.each do |line|
+		do_each_row.call(fin, line)
 	end
+	SQLDB.create_index
 end

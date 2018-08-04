@@ -6,12 +6,15 @@ require 'json'
 require 'time'
 require './common_funcs'
 require './sqlite_treat'
+require './es_handler'
 
 file_input = "/tmp/EbusinessContact.json"
-file_output = "/tmp/EbusinessContact_out.json"
+INDEX = "test_ebusiness_contact_report"
+TYPE = "history"
 SQLDB = MyDB.new("ids.db", "id_pairs")
+ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 
-do_each_row = Proc.new do |fin, fout, line|
+do_each_row = Proc.new do |fin,line|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
@@ -52,15 +55,13 @@ do_each_row = Proc.new do |fin, fout, line|
 		end
 	end
 
-#写入json
-	fout.puts(output_hash.to_json)
+#写入es
+	ES_DB.store(INDEX, TYPE, output_hash)
 end
 
 
 File.open(file_input, "r") do |fin|
-	File.open(file_output, "w") do |fout|
-		fin.each do |line|
-			do_each_row.call(fin, fout, line)
-		end
+	fin.each do |line|
+		do_each_row.call(fin, fout, line)
 	end
 end

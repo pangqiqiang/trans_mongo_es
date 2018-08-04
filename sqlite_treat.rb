@@ -10,7 +10,7 @@ class MyDB
 		@table_name = table_name
 		@db.execute <<-SQL
 			CREATE TABLE IF NOT EXISTS #{table_name}
-			(id TEXT PRIMARY KEY   NOT NULL, report_id TEXT, uid TEXT);
+			(id TEXT PRIMARY KEY  NOT NULL, report_id TEXT, uid TEXT);
 		SQL
 	end
 

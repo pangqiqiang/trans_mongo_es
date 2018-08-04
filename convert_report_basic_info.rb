@@ -7,14 +7,17 @@ require 'time'
 require './common_funcs'
 require './mongo_handler'
 require './sqlite_treat'
+require './es_handler'
 
 file_input = "/tmp/report_basic_info.json"
-file_output = "/tmp/report_basic_info_out.json"
 DB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "123456")
 SQLDB = MyDB.new("ids.db", "id_pairs")
+ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+INDEX = "test_report_basic_info"
+TYPE = "history"
 
 
-do_each_row = Proc.new do |fin, fout, line|
+do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
@@ -116,16 +119,14 @@ do_each_row = Proc.new do |fin, fout, line|
 		output_hash["mobile_basic_info"],
 	%w<cell_phone idcard reg_time real_name>)
 	output_hash["mobile_basic_info"]["update_time"] = date2int(hash_link(user_data, ["c_mobile_basic", "update_time"]))
-#写入json
-	fout.puts(output_hash.to_json)
+#写入es
+	ES_DB.store(INDEX, TYPE, output_hash)
 end
 
 
 
 File.open(file_input, "r") do |fin|
-	File.open(file_output, "w") do |fout|
-		fin.each do |line|
-			do_each_row.call(fin, fout, line)
-		end
+	fin.each do |line|
+		do_each_row.call(fin, line)
 	end
 end

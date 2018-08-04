@@ -7,13 +7,17 @@ require 'time'
 require './common_funcs'
 require './sqlite_treat'
 require './mongo_handler'
+require './es_handler'
 
 file_input = "/tmp/StudentInfo.json"
-file_output = "/tmp/StudentInfo_out.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 MONDB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "123456")
+ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+INDEX = "test_student_info_report"
+TYPE = "history"
 
-do_each_row = Proc.new do |fin, fout, line|
+
+do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
@@ -43,15 +47,13 @@ do_each_row = Proc.new do |fin, fout, line|
 			output_hash["student_info_list"] << temp_hash
 		end
 	end
-#写入json
-	fout.puts(output_hash.to_json)
+#写入ES
+	ES_DB.store(INDEX, TYPE, output_hash)
 end
 
 
 File.open(file_input, "r") do |fin|
-	File.open(file_output, "w") do |fout|
-		fin.each do |line|
-			do_each_row.call(fin, fout, line)
-		end
+	fin.each do |line|
+		do_each_row.call(fin,  line)
 	end
 end

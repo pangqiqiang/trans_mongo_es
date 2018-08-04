@@ -6,11 +6,16 @@ require 'json'
 require 'time'
 require './common_funcs'
 require './sqlite_treat'
-file_input = "/tmp/person_report.json"
-file_output = "/tmp/person_report_out.json"
-SQLDB = MyDB.new("ids.db", "id_pairs")
+require './es_handler'
 
-do_each_row = Proc.new do |fin, fout, line|
+file_input = "/tmp/person_report.json"
+SQLDB = MyDB.new("ids.db", "id_pairs")
+MONDB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "123456")
+ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+INDEX = "test_urgent_contact_report"
+TYPE = "history"
+
+do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
@@ -38,15 +43,13 @@ do_each_row = Proc.new do |fin, fout, line|
 		["l_report_base_contract", "n_total_count"])
 	output_hash["contactDetail"]["total_amount"] = hash_link(output_hash,
 		["l_report_base_contract", "n_total_amount"])
-#写入json
-	fout.puts(output_hash.to_json)
+#写入es
+	ES_DB.store(INDEX, TYPE, output_hash)
 end
 
 
 File.open(file_input, "r") do |fin|
-	File.open(file_output, "w") do |fout|
-		fin.each do |line|
-			do_each_row.call(fin, fout, line)
-		end
+	fin.each do |line|
+		do_each_row.call(fin, line)
 	end
 end
