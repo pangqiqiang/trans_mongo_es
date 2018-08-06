@@ -23,7 +23,6 @@ File.open(file_input, "r") do |fin|
 		#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["_id"] = output_hash["report_id"]
 		output_hash["update_time"] = Time.now.to_i
 		if input_hash["l_report_ebusiness_expense"] && (input_hash["l_report_ebusiness_expense"].is_a? Array)
 			output_hash["ebusiness_expense_list"] = Array.new

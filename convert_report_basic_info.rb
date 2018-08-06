@@ -26,7 +26,6 @@ do_each_row = Proc.new do |fin, line|
 	next unless output_hash["old_id"].kind_of? String
 #获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-	output_hash["_id"] = output_hash["report_id"]
 #开始user_base_info
 	output_hash["user_base_info"] =  Hash.new
 	output_hash["user_base_info"]["telephone"] = hash_link(input_hash, ["l_business_system", 0, "c_telephone"])
@@ -34,7 +33,7 @@ do_each_row = Proc.new do |fin, line|
 	 %w<level_1_name level_2_code level_2_name level_3_code level_3_name> )
 	output_hash["user_base_info"]["home_addr"] = hash_link(input_hash,["c_base_info", "c_home_addr"])
 	output_hash["user_base_info"]["wechat_id"] = hash_link(input_hash, ["c_base_info", "c_wechat_id"])
-	output_hash["user_base_info"]["update_time"] = hash_link(input_hash, ["c_base_info","t_base_upd_tm"])
+	output_hash["user_base_info"]["update_time"] = date2int(hash_link(input_hash, ["c_base_info","t_base_upd_tm"]))
 ##开始car_info
 	output_hash["car_info"] =  Hash.new
 	output_hash["car_info"]["car_brand"] = hash_link(input_hash, ["c_car_info","c_car_brand"])
@@ -73,7 +72,7 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["job_info"] = Hash.new
 	output_hash["job_info"]["company_name"] = hash_link(input_hash, ["c_job_info", "c_company"])
 	output_hash["job_info"]["position"] = hash_link(input_hash, ["c_job_info", "c_position"])
-	output_hash["job_info"]["employment_date"] = hash_link(input_hash, ["c_job_info", "c_employment_date"])
+	output_hash["job_info"]["employment_date"] = date2int(hash_link(input_hash, ["c_job_info", "c_employment_date"]))
 	output_hash["job_info"]["company_tel"] = hash_link(input_hash, ["c_job_info", "c_company_tel"])
 	rename_hash_item(input_hash["c_job_info"],output_hash["job_info"],
 	 %w<level_1_code level_1_name level_2_code level_2_name level_3_code level_3_name> )
@@ -94,8 +93,8 @@ do_each_row = Proc.new do |fin, line|
 	rename_hash_item(hash_link(input_hash, ["c_gjj_info", "task_data", "base_info"]),output_hash["gjj_base_info"],
 	 %w<cert_type begin_date last_pay_date pay_status balance cust_no pay_status_desc cert_no corp_name name>)
 #时间格式不统一做兼容处理,es
-	output_hash["gjj_base_info"]["begin_date"] = date_compat(output_hash["gjj_base_info"]["begin_date"])
-	output_hash["gjj_base_info"]["last_pay_date"] = date_compat(output_hash["gjj_base_info"]["last_pay_date"])
+	output_hash["gjj_base_info"]["begin_date"] = date2int(output_hash["gjj_base_info"]["begin_date"])
+	output_hash["gjj_base_info"]["last_pay_date"] = date2int(output_hash["gjj_base_info"]["last_pay_date"])
 
 
 #开始shebao_base_info

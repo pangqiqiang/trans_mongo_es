@@ -24,8 +24,7 @@ File.open(file_input, "r") do |fin|
 	#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["_id"] = output_hash["report_id"]
-		output_hash["shebao_data"] = input_hash["c_shebao_info"]
+		output_hash["shebao_data"] = input_hash["c_shebao_info"].to_s
 		ES_DB.store(INDEX, TYPE, output_hash)
 	end
 end

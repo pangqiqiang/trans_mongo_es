@@ -26,7 +26,7 @@ File.open(file_input) do |fin|
 		temp["live_result"] = row[1]
 		temp["card_verify_result"] = row[2]
 		temp["compare_result"] = row[3]
-		ES_DB.store(INDEX, TYPE, output_hash)
+		ES_DB.store(INDEX, TYPE, temp)
 	end
 end
 

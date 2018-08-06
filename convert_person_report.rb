@@ -23,7 +23,6 @@ do_each_row = Proc.new do |fin, line|
 	next unless output_hash["old_id"].kind_of? String
 #获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-	output_hash["_id"] = output_hash["report_id"]
 	output_hash["real_name"] = hash_link(input_hash, ["c_report_person", "phone_num"])
 	output_hash["home_addr"] = hash_link(input_hash, ["c_report_person", "c_home_addr"])
 	output_hash["wechat_id"] = hash_link(input_hash, ["c_report_person", "c_wechat_id"])

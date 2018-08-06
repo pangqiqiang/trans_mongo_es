@@ -26,7 +26,6 @@ do_each_row = Proc.new do |fin, line|
 	next unless output_hash["old_id"].kind_of? String
 #获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-	output_hash["_id"] = output_hash["report_id"]
 	output_hash["update_time"] = Time.now.to_i
 #查询l_xueji_info列表
 	xueji_info = MONDB.fetch_item_from_id(output_hash["old_id"])["l_xueji_info"] rescue nil

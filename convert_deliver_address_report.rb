@@ -58,6 +58,6 @@ end
 
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
-		do_each_row.call(fin, fout, line)
+		do_each_row.call(fin, line)
 	end
 end

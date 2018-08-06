@@ -9,7 +9,7 @@ require './es_handler'
 
 Encoding.default_external=Encoding.find("utf-8")
 
-file_input = "t_face_verify.txt"
+file_input = "/tmp/t_face_verify.txt"
 INDEX = "test_face_verify"
 TYPE = "history"
 SQLDB = MyDB.new("ids.db", "id_pairs")
@@ -37,6 +37,6 @@ File.open(file_input) do |fin|
 		temp["name"] = row[11]
 		temp["idcard_no"] = row[12]
 		temp["biz_no"] = row[13]
-		ES_DB.store(INDEX, TYPE, output_hash)
+		ES_DB.store(INDEX, TYPE, temp)
 	end
 end

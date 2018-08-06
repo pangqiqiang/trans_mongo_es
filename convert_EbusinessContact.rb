@@ -23,7 +23,6 @@ do_each_row = Proc.new do |fin,line|
 	next unless output_hash["old_id"].kind_of? String
 #获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-	output_hash["_id"] = output_hash["report_id"]
 	output_hash["update_time"] = Time.now.to_i
 #开始deliver_addresse_list
 	if input_hash["l_report_collection_contact"] && (input_hash["l_report_collection_contact"].is_a? Array)
@@ -62,6 +61,6 @@ end
 
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
-		do_each_row.call(fin, fout, line)
+		do_each_row.call(fin, line)
 	end
 end

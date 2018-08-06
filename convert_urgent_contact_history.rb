@@ -10,7 +10,6 @@ require './es_handler'
 
 file_input = "/tmp/urgent_contact_report_history.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
-MONDB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "123456")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 INDEX = "test_urgent_contact_report_history"
 TYPE = "history"
@@ -25,7 +24,6 @@ File.open(file_input, "r") do |fin|
 	#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["_id"] = output_hash["report_id"]
 		output_hash["contactDetail"] = Array.new
 		transfer_list(input_hash["l_base_info_history"],
 			output_hash["contactDetail"], "l_contacts")
