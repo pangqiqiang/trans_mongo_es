@@ -10,9 +10,10 @@ Encoding.default_external=Encoding.find("utf-8")
 
 file_input = "/tmp/t_face_verify_result.txt"
 INDEX = "test_face_verify_result"
-TYPE = "history"
+TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+BODY_QUEUE = []
 
 
 File.open(file_input) do |fin|
@@ -26,7 +27,8 @@ File.open(file_input) do |fin|
 		temp["live_result"] = row[1]
 		temp["card_verify_result"] = row[2]
 		temp["compare_result"] = row[3]
-		ES_DB.store(INDEX, TYPE, temp)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 end
 

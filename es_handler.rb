@@ -5,7 +5,6 @@ require 'rubygems'
 require 'elasticsearch'
 
 class ELS
-
 	def initialize(*hosts)
 		@client = Elasticsearch::Client.new url:hosts
 	end
@@ -19,5 +18,8 @@ class ELS
 	def update(index, type, id, doc)
 		@client.update index:index, type:type, id:id, body: { doc: doc }
 	end
-end
 
+	def bulk_push(index, type, limit, docs)
+		@clinet.bulk body: docs
+	end
+end

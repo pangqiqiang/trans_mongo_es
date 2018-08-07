@@ -9,9 +9,10 @@ require './sqlite_treat'
 require './es_handler'
 file_input = "/tmp/user_info.json"
 INDEX = "test_user_info"
-TYPE = "history"
+TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+BODY_QUEUE = []
 
 do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
@@ -81,7 +82,8 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
-	ES_DB.update(INDEX, TYPE, report_id, output_hash)
+	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, "report_id", 2000)
+	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 
 File.open(file_input, "r") do |fin|

@@ -10,9 +10,10 @@ require './es_handler'
 
 file_input = "/tmp/location_info_history.json"
 INDEX = "test_location_info_history"
-TYPE = "history"
+TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+BODY_QUEUE = []
 
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
@@ -38,6 +39,7 @@ File.open(file_input, "r") do |fin|
 		end
 		output_hash["update_time"] = Time.now.to_i
 		#写入es
-		ES_DB.store(INDEX, TYPE, output_hash)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 end

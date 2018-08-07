@@ -14,7 +14,8 @@ DB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "12
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 INDEX = "test_report_basic_info"
-TYPE = "history"
+TYPE = "credit_data"
+BODY_QUEUE = []
 
 
 do_each_row = Proc.new do |fin, line|
@@ -119,7 +120,8 @@ do_each_row = Proc.new do |fin, line|
 	%w<cell_phone idcard reg_time real_name>)
 	output_hash["mobile_basic_info"]["update_time"] = date2int(hash_link(user_data, ["c_mobile_basic", "update_time"]))
 #写入es
-	ES_DB.store(INDEX, TYPE, output_hash)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 
 

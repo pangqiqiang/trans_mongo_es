@@ -12,8 +12,8 @@ file_input = "/tmp/urgent_contact_report_history.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 INDEX = "test_urgent_contact_report_history"
-TYPE = "history"
-
+TYPE = "credit_data"
+BODY_QUEUE = []
 
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
@@ -28,6 +28,7 @@ File.open(file_input, "r") do |fin|
 		transfer_list(input_hash["l_base_info_history"],
 			output_hash["contactDetail"], "l_contacts")
 #写入es
-	ES_DB.store(INDEX, TYPE, output_hash)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 end

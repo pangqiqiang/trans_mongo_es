@@ -12,7 +12,8 @@ file_input = "/tmp/urgent_contact_report.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 INDEX = "test_urgent_contact_report"
-TYPE = "history"
+TYPE = "credit_data"
+BODY_QUEUE = []
 
 do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
@@ -42,7 +43,8 @@ do_each_row = Proc.new do |fin, line|
 		end
 	end
 #写入es
-	ES_DB.store(INDEX, TYPE, output_hash)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 
 
