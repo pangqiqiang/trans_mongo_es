@@ -19,7 +19,7 @@ class ELS
 		@client.update index:index, type:type, id:id, body: { doc: doc }
 	end
 
-	def bulk_push(index, type, limit, docs)
-		@clinet.bulk body: docs
+	def bulk_push(docs)
+		@client.bulk body: docs
 	end
 end

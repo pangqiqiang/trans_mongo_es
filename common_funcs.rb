@@ -61,34 +61,41 @@ end
 
 
 def gen_store_doc_bodies(index, type, doc, list, limit)
-	if list.size < limit
-		list << doc
-		return
-	else
-		list << doc
-		body = Array.new
-		list.each do |item|
-			each_doc = {index: { _index: index, _type: type, data: item }}
-			body << each_doc
-		end
-		return body
+	list << doc
+	return if list.size < limit
+	body = Array.new
+	while item = list.shift
+		each_doc = {index: { _index: index, _type: type, data: item }}
+		body << each_doc
 	end
+	return body
+end
+
+def gen_remain_store_bodies(index, type, list)
+	body = Array.new
+	while item = list.shift
+		each_doc = {index: { _index: index, _type: type, data: item }}
+		body << each_doc
+	end
+	return body
 end
 
 def gen_update_doc_bodies(index, type, doc, list, key, limit)
-	if list.size < limit
-		list << doc
-		return
-	else
-		list << doc
-		body = Array.new
-		list.each do |item|
-			each_doc = {update: { _index: index, _type: type, _id: item[key], data: {doc: item} }}
-			body << each_doc
-		end
-		list.clear
-		return body
+	list << doc
+	return if list.size < limit
+	body = Array.new
+	while item = list.shift
+		each_doc = {update: { _index: index, _type: type, _id: item[key], data: {doc: item} }}
+		body << each_doc
 	end
+	return body
 end
 
-
+def gen_remain_update_bodies(index, type, list, key)
+	body = Array.new
+	while item = list.shift
+		each_doc = {update: { _index: index, _type: type, _id: item[key], data: {doc: item} }}
+		body << each_doc
+	end
+	return body
+end

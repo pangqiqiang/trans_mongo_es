@@ -29,9 +29,7 @@ class MyDB
 	end
 
 	def create_index
-		@db.execute <<-SQL
-			CREATE UNIQUE INDEX ID_INDEX ON #{@table_name} (id);
-			CREATE INDEX UID_INDEX ON #{@table_name} (uid);
-		SQL
+		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (id)"
+		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (uid)"
 	end
 end

@@ -25,7 +25,11 @@ File.open(file_input, "r") do |fin|
 		output_hash["report_detail_list"] = input_hash["l_report_contact_list"]
 		output_hash["update_time"] = Time.now.to_i
 #写入es
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
+	end
+	if BODY_QUEUE.size > 0
+		out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+		ES_DB.bulk_push(out_body)
 	end
 end

@@ -57,4 +57,8 @@ File.open(file_input, "r") do |fin|
 	fin.each do |line|
 		do_each_row.call(fin,  line)
 	end
+	if BODY_QUEUE.size > 0
+		out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+		ES_DB.bulk_push(out_body)
+	end
 end

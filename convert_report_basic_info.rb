@@ -48,12 +48,12 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["car_info"]["car_is_used"] = hash_link(input_hash, ["c_car_info", "b_car_is_used"])
 	output_hash["car_info"]["car_is_mortgage"] = hash_link(input_hash, ["c_car_info", "b_car_is_mortgage"])
 	output_hash["car_info"]["car_image_list"] = hash_link(input_hash, ["c_car_info", "l_car_image"])
-	output_hash["car_info"]["update_tm"] = Time.now.to_i      #当前时间用整型表示
+	output_hash["car_info"]["update_time"] = Time.now.to_i      #当前时间用整型表示
 #开始earn_info
 	output_hash["earn_info"] = Hash.new
 	output_hash["earn_info"]["earn_month"] = hash_link(input_hash, ["c_earn_inf", "c_earn_month"])
 	output_hash["earn_info"]["earn_image_list"] = hash_link(input_hash, ["c_earn_inf", "l_earn_image"])
-	output_hash["earn_info"]["update_tm"] = Time.now.to_i		#当前时间用整型表示
+	output_hash["earn_info"]["update_time"] = Time.now.to_i		#当前时间用整型表示
 #开始house_info
 	output_hash["house_info"] = Hash.new
 	rename_hash_item(input_hash["c_house_info"],output_hash["house_info"],
@@ -118,6 +118,7 @@ do_each_row = Proc.new do |fin, line|
 	rename_hash_item(hash_link(user_data, ["c_mobile_basic"]),
 		output_hash["mobile_basic_info"],
 	%w<cell_phone idcard reg_time real_name>)
+	output_hash["mobile_basic_info"]["reg_time"] = date_compat(output_hash["mobile_basic_info"]["reg_time"])
 	output_hash["mobile_basic_info"]["update_time"] = date2int(hash_link(user_data, ["c_mobile_basic", "update_time"]))
 #写入es
 	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
@@ -129,5 +130,9 @@ end
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
 		do_each_row.call(fin, line)
+	end
+	if BODY_QUEUE.size > 0
+		out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+		ES_DB.bulk_push(out_body)
 	end
 end

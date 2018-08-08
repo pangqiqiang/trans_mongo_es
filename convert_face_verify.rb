@@ -31,14 +31,18 @@ File.open(file_input) do |fin|
 		temp["card_back_img"] = row[4]
 		temp["card_verify_status"] = row[5]
 		temp["compare_status"] = row[6]
-		temp["update_tm"] = date2int(row[7])
+		temp["update_time"] = date2int(row[7])
 		temp["crt_tm"] = date2int(row[8])
 		temp["biz_id"] = row[9]
 		temp["n_type"] = row[10]
 		temp["name"] = row[11]
 		temp["idcard_no"] = row[12]
 		temp["biz_no"] = row[13]
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, temp, BODY_QUEUE, 3000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
+	end
+	if BODY_QUEUE.size > 0
+		out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+		ES_DB.bulk_push(out_body)
 	end
 end

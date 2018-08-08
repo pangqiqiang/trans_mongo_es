@@ -90,5 +90,9 @@ File.open(file_input, "r") do |fin|
 	fin.each do |line|
 		do_each_row.call(fin, line)
 	end
+	if BODY_QUEUE.size > 0
+		out_body = gen_remain_update_bodies(INDEX, TYPE, BODY_QUEUE, "report_id")
+		ES_DB.bulk_push(out_body)
+	end
 	SQLDB.create_index
 end
