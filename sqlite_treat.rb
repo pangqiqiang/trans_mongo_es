@@ -15,9 +15,7 @@ class MyDB
 	end
 
 	def store(id, report_id, uid)
-		@db.execute "BEGIN TRANSACTION"
 		@db.execute("INSERT INTO #{@table_name} VALUES (?,?,?)", [id, report_id, uid])
-		@db.execute "COMMIT TRANSACTION"
 	end
 
 	def fetch_from_id(id)
@@ -32,4 +30,13 @@ class MyDB
 		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (id)"
 		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (uid)"
 	end
+
+	def bulk_store(list)
+		@db.execute "BEGIN TRANSACTION"
+		list.each do |item|
+			@db.execute("INSERT INTO #{@table_name} VALUES (?,?,?)", item)
+		end
+		@db.execute "COMMIT TRANSACTION"
+	end
+
 end

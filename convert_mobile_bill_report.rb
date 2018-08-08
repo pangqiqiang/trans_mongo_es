@@ -24,6 +24,8 @@ File.open(file_input, "r") do |fin|
 		output_hash["old_id"] = input_hash["_id"]
 		#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
+		#忽略bill字段为空记录
+		next unless input_hash["l_mobile_bill"] and input_hash["l_mobile_bill"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["report_bill_list"] = input_hash["l_mobile_bill"]
 		output_hash["update_time"] = Time.now.to_i

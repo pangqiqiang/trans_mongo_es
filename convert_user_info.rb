@@ -13,6 +13,7 @@ TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
 BODY_QUEUE = []
+SQL_VALUES =[]
 
 do_each_row = Proc.new do |fin, line|
 	output_hash = Hash.new
@@ -26,7 +27,9 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["report_id"] = report_id
 	output_hash["puid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 #维护report_id, id, uid映射关系
-	SQLDB.store(output_hash["old_id"], report_id, output_hash["puid"])
+#20000条一次事务加快速度
+	SQL_bulk = gen_sql_list([output_hash["old_id"],report_id,output_hash["puid"]], SQL_VALUES, 20000)
+	SQLDB.bulk_store(SQL_bulk) if SQL_bulk.is_a? Array
 	output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 	output_hash["system_type"] = hash_link(input_hash, ["l_business_system", 0, "c_system_name"])
 	output_hash["user_name"] = hash_link(input_hash, ["c_base_info","c_user_name"])
@@ -90,9 +93,12 @@ File.open(file_input, "r") do |fin|
 	fin.each do |line|
 		do_each_row.call(fin, line)
 	end
+#处理es最后未到limit的记录
 	if BODY_QUEUE.size > 0
 		out_body = gen_remain_update_bodies(INDEX, TYPE, BODY_QUEUE, "report_id")
 		ES_DB.bulk_push(out_body)
 	end
+#处理sqlite最后未到limit的记录
+	SQLDB.bulk_store(SQL_VALUES) if SQL_VALUES.size > 0
 	SQLDB.create_index
 end

@@ -23,9 +23,11 @@ File.open(file_input, "r") do |fin|
 		output_hash["old_id"] = input_hash["_id"]
 	#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
+	# 忽略社保记录为空记录
+		next unless input_hash["c_shebao_info"] and input_hash["c_shebao_info"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["shebao_data"] = input_hash["c_shebao_info"].to_s
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		output_hash["shebao_data"] = input_hash["c_shebao_info"].to_json
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0

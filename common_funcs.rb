@@ -99,3 +99,14 @@ def gen_remain_update_bodies(index, type, list, key)
 	end
 	return body
 end
+
+
+def gen_sql_list(item, list, limit)
+	list << item
+	return if list.size < limit
+	body = Array.new
+	while item = list.shift
+		body << item
+	end
+	return body
+end

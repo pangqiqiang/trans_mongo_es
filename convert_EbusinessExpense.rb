@@ -23,20 +23,21 @@ File.open(file_input, "r") do |fin|
 		output_hash["old_id"] = input_hash["_id"]
 		#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
+		#忽略expanse不存在为空的记录
+		next unless input_hash["l_report_ebusiness_expense"] && input_hash["l_report_ebusiness_expense"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["update_time"] = Time.now.to_i
-		if input_hash["l_report_ebusiness_expense"] && (input_hash["l_report_ebusiness_expense"].is_a? Array)
-			output_hash["ebusiness_expense_list"] = Array.new
-			input_hash["l_report_ebusiness_expense"].each do |item|
-				temp_hash = Hash.new
-				%w{trans_mth all_amount all_count category}.each do |key|
-					temp_hash[key] = item[key]
-				end
-				output_hash["ebusiness_expense_list"] << temp_hash
+		#开始ebusiness_expense_list
+		output_hash["ebusiness_expense_list"] = Array.new
+		input_hash["l_report_ebusiness_expense"].each do |item|
+			temp_hash = Hash.new
+			%w{trans_mth all_amount all_count category}.each do |key|
+				temp_hash[key] = item[key]
 			end
+			output_hash["ebusiness_expense_list"] << temp_hash
 		end
 		#写入es
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 2000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0
