@@ -7,15 +7,17 @@ require 'time'
 require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
+require 'thread'
 file_input = "/tmp/user_info.json"
 INDEX = "test_user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
-BODY_QUEUE = []
-SQL_VALUES =[]
+body_queue0=[]; body_queue1=[]; body_queue2=[]; body_queue3=[]; body_queue4=[]; body_queue5=[]
+body_queue6=[]; body_queue7=[]
+$queue = Queue.new
 
-do_each_row = Proc.new do |fin, line|
+do_each_row = Proc.new do |line, body_queue, sql_queue|
 	output_hash = Hash.new
 	line.chomp!
 	input_hash = JSON.parse(line)
@@ -27,9 +29,10 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["report_id"] = report_id
 	output_hash["puid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 #维护report_id, id, uid映射关系
-#20000条一次事务加快速度
-	SQL_bulk = gen_sql_list([output_hash["old_id"],report_id,output_hash["puid"]], SQL_VALUES, 20000)
-	SQLDB.bulk_store(SQL_bulk) if SQL_bulk.is_a? Array
+#100条一次事务加快速度
+	#sql_bulk = gen_sql_list([output_hash["old_id"],report_id,output_hash["puid"]], SQL_VALUES, 100)
+	#SQLDB.store(output_hash["old_id"], report_id, output_hash["puid"])
+	sql_queue << [output_hash["old_id"], report_id, output_hash["puid"]]
 	output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 	output_hash["system_type"] = hash_link(input_hash, ["l_business_system", 0, "c_system_name"])
 	output_hash["user_name"] = hash_link(input_hash, ["c_base_info","c_user_name"])
@@ -85,20 +88,43 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
-	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, "report_id", 2000)
+	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 2000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 
-File.open(file_input, "r") do |fin|
-	fin.each do |line|
-		do_each_row.call(fin, line)
-	end
+def thr_gen(filename, do_each_row, body_queue, sql_queue)
+	File.open(filename, "r") do |fin|
+		fin.each do |line|
+			do_each_row.call(line, body_queue, sql_queue)
+		end
 #处理es最后未到limit的记录
-	if BODY_QUEUE.size > 0
-		out_body = gen_remain_update_bodies(INDEX, TYPE, BODY_QUEUE, "report_id")
-		ES_DB.bulk_push(out_body)
+		if body_queue.size > 0
+			out_body = gen_remain_update_bodies(INDEX, TYPE, body_queue, "report_id")
+			ES_DB.bulk_push(out_body)
+		end
 	end
-#处理sqlite最后未到limit的记录
-	SQLDB.bulk_store(SQL_VALUES) if SQL_VALUES.size > 0
-	SQLDB.create_index
 end
+
+Thread.new {thr_gen("/tmp/user_info_000", do_each_row, body_queue0, $queue)}
+Thread.new {thr_gen("/tmp/user_info_001", do_each_row, body_queue1, $queue)}
+Thread.new {thr_gen("/tmp/user_info_002", do_each_row, body_queue2, $queue)}
+Thread.new {thr_gen("/tmp/user_info_003", do_each_row, body_queue3, $queue)}
+Thread.new {thr_gen("/tmp/user_info_004", do_each_row, body_queue4, $queue)}
+Thread.new {thr_gen("/tmp/user_info_005", do_each_row, body_queue5, $queue)}
+Thread.new {thr_gen("/tmp/user_info_006", do_each_row, body_queue6, $queue)}
+Thread.new {thr_gen("/tmp/user_info_007", do_each_row, body_queue7, $queue)}
+
+#生产速度慢，先跑30s
+sleep 30
+
+consumer = Thread.new do
+	until $queue.empty?
+		#如果队列少于5，停止30s
+		sleep 30 if $queue.size <= 5
+		value = $queue.pop
+		#p value
+		SQLDB.store(value)
+	end
+end
+
+consumer.join
