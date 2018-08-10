@@ -38,7 +38,7 @@ File.open(file_input) do |fin|
 		temp["name"] = row[11]
 		temp["idcard_no"] = row[12]
 		temp["biz_no"] = row[13]
-		out_body = gen_store_doc_bodies(INDEX, TYPE, temp, BODY_QUEUE, 3000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, temp, BODY_QUEUE, 2000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0

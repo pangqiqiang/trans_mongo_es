@@ -28,7 +28,7 @@ File.open(file_input, "r") do |fin|
 		transfer_list(input_hash["l_base_info_history"],
 			output_hash["contactDetail"], "l_contacts")
 #写入es
-	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0

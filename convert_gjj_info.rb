@@ -27,7 +27,7 @@ File.open(file_input, "r") do |fin|
 		next unless input_hash["c_gjj_info"] and input_hash["c_gjj_info"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["gjj_data"] = input_hash["c_gjj_info"]
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0

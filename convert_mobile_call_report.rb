@@ -14,6 +14,8 @@ ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:92
 body_queue0=[]; body_queue1=[]; body_queue2=[]; body_queue3=[]; body_queue4=[]; body_queue5=[]
 body_queue6=[]; body_queue7=[];body_queue8=[];body_queue9=[]
 threads = []
+#防止线程无警告中断
+Thread.abort_on_exception = true
 
 def gen_thr(filename, body_queue)
 	open(filename, 'r') do |fin|
@@ -34,21 +36,21 @@ def gen_thr(filename, body_queue)
 			ES_DB.bulk_push(out_body) if out_body.is_a? Array
 		end
 		if body_queue.size > 0
-			out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+			out_body = gen_remain_store_bodies(INDEX, TYPE, body_queue)
 			ES_DB.bulk_push(out_body)
 		end
 	end
 end
 
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_000", body_queue0)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_001", body_queue1)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_002", body_queue2)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_003", body_queue3)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_004", body_queue4)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_005", body_queue5)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_006", body_queue6)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_007", body_queue7)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_008", body_queue8)}
-threads << Thread.new { gen_thr("/tmp/mobile_call_report_009", body_queue9)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_000", body_queue0)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_001", body_queue1)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_002", body_queue2)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_003", body_queue3)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_004", body_queue4)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_005", body_queue5)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_006", body_queue6)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_007", body_queue7)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_008", body_queue8)}
+threads << Thread.new { gen_thr("/home/work/mobile_call_report_009", body_queue9)}
 
 threads.map(&:join)

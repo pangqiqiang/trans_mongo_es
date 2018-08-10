@@ -56,7 +56,7 @@ do_each_row = Proc.new do |fin,line|
 	end
 
 #写入es
-	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 2000)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 

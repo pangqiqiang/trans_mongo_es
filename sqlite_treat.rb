@@ -10,16 +10,12 @@ class MyDB
 		@table_name = table_name
 		@db.execute <<-SQL
 			CREATE TABLE IF NOT EXISTS #{table_name}
-			(id TEXT PRIMARY KEY  NOT NULL, report_id TEXT, uid TEXT);
-			CREATE INDEX ID_INDEX ON #{@table_name} (id);
-			CREATE INDEX ID_INDEX ON #{@table_name} (uid)
+			(id TEXT PRIMARY KEY  NOT NULL, report_id TEXT, uid TEXT)
 		SQL
 	end
 
 	def store(list)
-		@db.execute "BEGIN TRANSACTION"
 		@db.execute("INSERT INTO #{@table_name} VALUES (?,?,?)", list)
-		@db.execute "COMMIT TRANSACTION"
 	end
 
 	def fetch_from_id(id)
@@ -32,7 +28,7 @@ class MyDB
 
 	def create_index
 		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (id)"
-		@db.execute "CREATE INDEX ID_INDEX ON #{@table_name} (uid)"
+		@db.execute "CREATE INDEX UID_INDEX ON #{@table_name} (uid)"
 	end
 
 	def bulk_store(list)

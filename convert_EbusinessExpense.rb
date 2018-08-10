@@ -37,7 +37,7 @@ File.open(file_input, "r") do |fin|
 			output_hash["ebusiness_expense_list"] << temp_hash
 		end
 		#写入es
-		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 2000)
+		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0

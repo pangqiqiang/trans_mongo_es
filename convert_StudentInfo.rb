@@ -48,7 +48,7 @@ do_each_row = Proc.new do |fin, line|
 		end
 	end
 #写入ES
-	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 3000)
+	out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 
