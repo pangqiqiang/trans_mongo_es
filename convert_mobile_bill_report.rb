@@ -28,8 +28,8 @@ File.open(file_input, "r") do |fin|
 		next unless input_hash["l_mobile_bill"] and input_hash["l_mobile_bill"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["report_bill_list"] = input_hash["l_mobile_bill"]
-		#total_amt字段修改为分自乘100，ruby多么简介！！！！
-		output_hash["report_bill_list"].map{|item| item["total_amt"] *=100 if item["total_amt"]; item}
+		#total_amt字段修改为分自乘100，ruby多么简洁！！！！
+		output_hash["report_bill_list"].map{|item| item["total_amt"] *=100 if item["total_amt"]}
 		output_hash["update_time"] = Time.now.to_i
 #写入es
 		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
