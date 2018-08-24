@@ -36,7 +36,7 @@ do_each_row = Proc.new do |line, body_queue, sql_queue|
 	#sql_bulk = gen_sql_list([output_hash["old_id"],report_id,output_hash["puid"]], SQL_VALUES, 100)
 	#SQLDB.store(output_hash["old_id"], report_id, output_hash["puid"])
 	sql_queue << [output_hash["old_id"], report_id, output_hash["puid"]]
-	output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
+	#output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 	output_hash["system_type"] = hash_link(input_hash, ["l_business_system", 0, "c_system_name"])
 	output_hash["user_name"] = hash_link(input_hash, ["c_base_info","c_user_name"])
 	output_hash["card_no"] = input_hash["_id"]
@@ -122,7 +122,7 @@ sleep 30
 
 consumer = Thread.new do
 	until $queue.empty?
-		#如果队列少于5，停止30s等等生产
+		#如果队列少于5，停止30s等等生产,防止丢失数据
 		sleep 30 if $queue.size <= 5
 		value = $queue.pop
 		#p value
