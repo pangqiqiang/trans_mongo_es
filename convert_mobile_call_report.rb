@@ -10,7 +10,7 @@ require 'thread'
 INDEX = "test_mobile_call_report"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
-ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 body_queue0=[]; body_queue1=[]; body_queue2=[]; body_queue3=[]; body_queue4=[]; body_queue5=[]
 body_queue6=[]; body_queue7=[];body_queue8=[];body_queue9=[]
 threads = []

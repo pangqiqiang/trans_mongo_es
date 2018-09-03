@@ -4,7 +4,7 @@
 require "./es_handler"
 require "json"
 
-ES_DB = ELS.new("192.168.30.209:9200", "192.168.30.207:9200", "192.168.30.208:9200")
+ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 
 output_hash={"old_id" => "1234567908"}
 report_id = ES_DB.store("test_user_info", "history", output_hash)
