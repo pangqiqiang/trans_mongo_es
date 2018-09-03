@@ -9,7 +9,7 @@ require './sqlite_treat'
 require './es_handler'
 
 file_input = "/tmp/gjj_info.json"
-INDEX = "test_gjj_info"
+INDEX = "gjj_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")

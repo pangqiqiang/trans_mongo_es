@@ -9,7 +9,7 @@ require './sqlite_treat'
 require './es_handler'
 require 'thread'
 
-INDEX = "test_user_info"
+INDEX = "user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 SQLDB.create_index

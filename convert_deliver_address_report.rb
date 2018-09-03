@@ -11,7 +11,7 @@ require './es_handler'
 file_input = "/tmp/deliver_address_report.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
-INDEX = "test_deliver_address_report"
+INDEX = "deliver_address_report"
 TYPE = "credit_data"
 BODY_QUEUE = []
 

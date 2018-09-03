@@ -13,7 +13,7 @@ file_input = "/tmp/report_basic_info.json"
 DB = Deal_Mongo.new("10.25.141.106:18000", "credit", "c_user_data", "trans", "123456")
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
-INDEX = "test_report_basic_info"
+INDEX = "report_basic_info"
 TYPE = "credit_data"
 BODY_QUEUE = []
 
