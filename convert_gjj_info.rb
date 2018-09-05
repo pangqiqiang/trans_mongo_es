@@ -26,7 +26,7 @@ File.open(file_input, "r") do |fin|
 	#忽略公积金为空记录
 		next unless input_hash["c_gjj_info"] and input_hash["c_gjj_info"].size > 0
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["gjj_data"] = input_hash["c_gjj_info"]
+		output_hash["gjj_data"] = input_hash["c_gjj_info"].to_json
 		out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end

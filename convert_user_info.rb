@@ -91,7 +91,7 @@ do_each_row = Proc.new do |line, body_queue, sql_queue|
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
-	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 1000)
+	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 3000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 

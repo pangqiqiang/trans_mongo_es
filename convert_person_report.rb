@@ -54,6 +54,8 @@ do_each_row = Proc.new do |fin, line|
 	 ["c_report_person", "n_zhengxin_overdue_count"])
 	rename_hash_item(input_hash["c_report_person"], output_hash["zhengXinReport"],
 		%w<watchListDetails antifraudScore antifraudVerify antifraudRisk>)
+	output_hash["zhengXinReport"]["antifraudVerify"] = output_hash["zhengXinReport"]["antifraudVerify"].to_json
+	output_hash["zhengXinReport"]["antifraudRisk"] = output_hash["zhengXinReport"]["antifraudRisk"].to_json
 #开始ebusinessReport
 	output_hash["ebusinessReport"] = Hash.new
 	output_hash["ebusinessReport"]["ebusynessTotalAmount"] = hash_link(input_hash,

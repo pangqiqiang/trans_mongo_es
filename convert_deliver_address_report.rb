@@ -22,7 +22,7 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["old_id"] = input_hash["_id"]
 #忽略身份证号不存在记录
 	next unless output_hash["old_id"].kind_of? String
-忽略deliver为空的记录
+#忽略deliver为空的记录
 	next unless input_hash["l_report_deliver_address"] && input_hash["l_report_deliver_address"].size > 0
 #获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])

@@ -32,7 +32,7 @@ def gen_thr(filename, body_queue)
 			output_hash["report_detail_list"] = input_hash["l_report_contact_list"]
 			output_hash["update_time"] = Time.now.to_i
 	#写入es
-			out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, body_queue, 200)
+			out_body = gen_store_doc_bodies(INDEX, TYPE, output_hash, body_queue, 100)
 			ES_DB.bulk_push(out_body) if out_body.is_a? Array
 		end
 		if body_queue.size > 0
