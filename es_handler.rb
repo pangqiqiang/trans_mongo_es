@@ -6,7 +6,7 @@ require 'elasticsearch'
 
 class ELS
 	def initialize(*hosts)
-		@client = Elasticsearch::Client.new url:hosts
+		@client = Elasticsearch::Client.new hosts:hosts, request_timeout:5*60, randomize_hosts: true
 	end
 
 	def store(index, type, doc)
