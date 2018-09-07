@@ -7,11 +7,13 @@ require 'time'
 require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
+require './mysql_deal'
 require 'thread'
 
 INDEX = "user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
+MSQLDB = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
 SQLDB.create_index
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 body_queue0=[]; body_queue1=[]; body_queue2=[]; body_queue3=[]; body_queue4=[]; body_queue5=[]
@@ -31,11 +33,15 @@ do_each_row = Proc.new do |line, body_queue, sql_queue|
 	report_id = ES_DB.store(INDEX, TYPE, output_hash)
 	output_hash["report_id"] = report_id
 	output_hash["puid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
+	output_hash["ouid"] = output_hash["puid"]
+	#根据puid获取新id
+	output_hash["puid"] = MSQLDB.get_from_salt(output_hash["ouid"]) 
+
 #维护report_id, id, uid映射关系
 #100条一次事务加快速度
 	#sql_bulk = gen_sql_list([output_hash["old_id"],report_id,output_hash["puid"]], SQL_VALUES, 100)
 	#SQLDB.store(output_hash["old_id"], report_id, output_hash["puid"])
-	sql_queue << [output_hash["old_id"], report_id, output_hash["puid"]]
+	sql_queue << [output_hash["old_id"], report_id, output_hash["ouid"]]
 	#output_hash["quid"] = hash_link(input_hash, ["l_business_system", 0, "_id"])
 	output_hash["system_type"] = hash_link(input_hash, ["l_business_system", 0, "c_system_name"])
 	output_hash["user_name"] = hash_link(input_hash, ["c_base_info","c_user_name"])
