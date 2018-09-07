@@ -1,7 +1,6 @@
 require "rubygems"
 require "mysql2"
 class Mysql_DB
-
     def initialize(host,port,user,pass,db,tablename)
         @client = Mysql2::Client.new host: host, username: user, password: pass, database: db, port: port
         @tablename = tablename
