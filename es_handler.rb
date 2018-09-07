@@ -16,8 +16,8 @@ class ELS
 	end
 
 
-	def update(index, type, id, doc)
-		@client.update index:index, type:type, id:id, body: { doc: doc }
+	def update(index, type, doc)
+		@client.update index:index, type:type, body: { doc: doc }
 	end
 
 	def bulk_push(docs)

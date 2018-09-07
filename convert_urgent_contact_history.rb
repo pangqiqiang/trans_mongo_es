@@ -23,7 +23,7 @@ File.open(file_input, "r") do |fin|
 		output_hash["old_id"] = input_hash["_id"]
 	#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
-		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
+		output_hash["user_report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["contactDetail"] = Array.new
 		transfer_list(input_hash["l_base_info_history"],
 			output_hash["contactDetail"], "l_contacts")
