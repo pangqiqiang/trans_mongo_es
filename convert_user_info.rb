@@ -17,7 +17,7 @@ MSQLDB = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th"
 SQLDB.create_index
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 body_queue0=[]; body_queue1=[]; body_queue2=[]; body_queue3=[]; body_queue4=[]; body_queue5=[]
-body_queue6=[]; body_queue7=[]
+body_queue6=[]; body_queue7=[];body_queue8=[]; body_queue9=[]
 $queue = Queue.new
 #防止线程无警告中断
 Thread.abort_on_exception = true
@@ -122,6 +122,8 @@ Thread.new {thr_gen("/tmp/user_info_004", do_each_row, body_queue4, $queue)}
 Thread.new {thr_gen("/tmp/user_info_005", do_each_row, body_queue5, $queue)}
 Thread.new {thr_gen("/tmp/user_info_006", do_each_row, body_queue6, $queue)}
 Thread.new {thr_gen("/tmp/user_info_007", do_each_row, body_queue7, $queue)}
+Thread.new {thr_gen("/tmp/user_info_006", do_each_row, body_queue8, $queue)}
+Thread.new {thr_gen("/tmp/user_info_007", do_each_row, body_queue9, $queue)}
 
 #生产速度慢，先跑30s
 sleep 30
