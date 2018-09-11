@@ -60,7 +60,11 @@ def transfer_list(list_in, list_out, key)
 end
 
 def gen_id_body(index, type, id, output_hash)
-	{_index:index, _type:type, _id:id, data: output_hash}
+	{_index: index, _type: type, _id: id, data: output_hash}
+end
+
+def gen_body(index, type, output_hash)
+	{_index: index, _type: type, data: output_hash}
 end
 
 def gen_store_doc_bodies(doc, list, limit)
