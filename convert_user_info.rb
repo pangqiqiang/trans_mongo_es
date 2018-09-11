@@ -13,25 +13,25 @@ require 'thread'
 INDEX = "user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
-MSQLDB0 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB0 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB0 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB1 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB1 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB1 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB2 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB2 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB2 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB3 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB3 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB3 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB4 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB4 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB4 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB5 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB5 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB5 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB6 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB6 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB6 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB7 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB7 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB7 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB8 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB8 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB8 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
-MSQLDB9 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_11th",  "user_passport")
+MSQLDB9 = Mysql_DB.new("10.111.30.20", 3306, "op", "KRkFcVCbopZbS8R7", "jjd_12th",  "user_passport")
 FACEDB9 = Mysql_DB.new("10.111.20.2", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "t_face_verify")
 
 SQLDB.create_index
@@ -59,7 +59,7 @@ do_each_row = Proc.new do |line, body_queue, sql_queue,face_db,user_db|
 	#获取face_verify_status,face_verify_upd_tm
 	face_status, face_tm = face_db.get_face_from_uid(output_hash["ouid"])
 	case face_status
-	when -1
+	when -1, nil
 		output_hash["face_verify_status"] = 0
 	when 0
 		output_hash["face_verify_status"] = 4
@@ -127,7 +127,7 @@ do_each_row = Proc.new do |line, body_queue, sql_queue,face_db,user_db|
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
-	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id",3000)
+	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 3000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end
 

@@ -7,13 +7,13 @@ class Mysql_DB
     end
 
     def get_from_salt(salt)
-        return "" if salt.size == 0 
+        return  if not salt or salt.size == 0 
         result =  @client.query("SELECT uid FROM #{@tablename} WHERE salt ='#{salt}'")
         return result.first["uid"] if result.first
     end
 
     def get_face_from_uid(uid)
-        return "" if uid.size == 0
+        return if not uid or uid.size == 0
         result =  @client.query("SELECT * FROM #{@tablename} WHERE id = '#{uid}'")
         return result.first["b_compare_status"], result.first["t_update_tm"].to_s if result.first
     end
