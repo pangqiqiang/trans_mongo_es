@@ -59,12 +59,12 @@ do_each_row = Proc.new do |line, body_queue, sql_queue,face_db,user_db|
 	#获取face_verify_status,face_verify_upd_tm
 	face_status, face_tm = face_db.get_face_from_uid(output_hash["ouid"])
 	case face_status
-	when -1, nil
-		output_hash["face_verify_status"] = 0
 	when 0
 		output_hash["face_verify_status"] = 4
 	when 1
 		output_hash["face_verify_status"] = 3
+	else
+		output_hash["face_verify_status"] = 0
 	end
 	output_hash["face_verify_upd_tm"] = date2int(face_tm)
 #维护report_id, id, uid映射关系

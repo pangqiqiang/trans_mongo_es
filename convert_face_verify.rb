@@ -38,11 +38,11 @@ File.open(file_input) do |fin|
 		temp["name"] = row[11]
 		temp["idcard_no"] = row[12]
 		temp["biz_no"] = row[13]
-		out_body = gen_store_doc_bodies(INDEX, TYPE, temp, BODY_QUEUE, 2000)
+		out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 3000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end
 	if BODY_QUEUE.size > 0
-		out_body = gen_remain_store_bodies(INDEX, TYPE, BODY_QUEUE)
+		out_body = gen_remain_store_bodies(BODY_QUEUE)
 		ES_DB.bulk_push(out_body)
 	end
 end
