@@ -51,8 +51,8 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["car_info"]["update_time"] = Time.now.to_i      #当前时间用整型表示
 #开始earn_info
 	output_hash["earn_info"] = Hash.new
-	output_hash["earn_info"]["earn_month"] = hash_link(input_hash, ["c_earn_inf", "c_earn_month"])
-	output_hash["earn_info"]["earn_image_list"] = hash_link(input_hash, ["c_earn_inf", "l_earn_image"])
+	output_hash["earn_info"]["earn_month"] = hash_link(input_hash, ["c_earn_info", "c_earn_month"])
+	output_hash["earn_info"]["earn_image_list"] = hash_link(input_hash, ["c_earn_info", "l_earn_image"])
 	output_hash["earn_info"]["update_time"] = Time.now.to_i		#当前时间用整型表示
 #开始house_info
 	output_hash["house_info"] = Hash.new
