@@ -59,6 +59,19 @@ def transfer_list(list_in, list_out, key)
 	end
 end
 
+def transfer_list_with_item(list_in, list_out, key)
+	return unless list_in.is_a? Array
+	list_in.each do |item|
+		if item[key].is_a? Array
+			item[key].flatten.each do |nest|
+				list_out << nest
+			end
+		end
+	end
+end
+
+
+
 def gen_id_body(index, type, id, output_hash)
 	{_index: index, _type: type, _id: id, data: output_hash}
 end

@@ -31,7 +31,7 @@ do_each_row = Proc.new do |fin, line|
 	output_hash["user_base_info"] =  Hash.new
 	output_hash["user_base_info"]["telephone"] = hash_link(input_hash, ["l_business_system", 0, "c_telephone"])
 	rename_hash_item(input_hash["c_base_info"],output_hash["user_base_info"],
-	 %w<level_1_name level_2_code level_2_name level_3_code level_3_name> )
+	 %w<level_1_code level_1_name level_2_code level_2_name level_3_code level_3_name> )
 	output_hash["user_base_info"]["home_addr"] = hash_link(input_hash,["c_base_info", "c_home_addr"])
 	output_hash["user_base_info"]["wechat_id"] = hash_link(input_hash, ["c_base_info", "c_wechat_id"])
 	output_hash["user_base_info"]["update_time"] = date2int(hash_link(input_hash, ["c_base_info","t_base_upd_tm"]))
