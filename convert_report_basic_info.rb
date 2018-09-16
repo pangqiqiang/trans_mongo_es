@@ -38,7 +38,7 @@ do_each_row = Proc.new do |fin, line|
 ##开始car_info
 	output_hash["car_info"] =  Hash.new
 	output_hash["car_info"]["car_brand"] = hash_link(input_hash, ["c_car_info","c_car_brand"])
-	output_hash["car_info"]["car_mileage"] = hash_link(input_hash, ["c_car_info", "c_car_brand"])
+	output_hash["car_info"]["car_mileage"] = hash_link(input_hash, ["c_car_info", "c_car_mileage"])
 	output_hash["car_info"]["car_price"] = hash_link(input_hash, ["c_car_info", "c_car_price"])
 	output_hash["car_info"]["car_pay_status"] = hash_link(input_hash, ["c_car_info", "c_car_pay_status"])
 	output_hash["car_info"]["car_paid"] = hash_link(input_hash, ["c_car_info", "c_car_paid"])

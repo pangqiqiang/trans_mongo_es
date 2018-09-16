@@ -24,12 +24,15 @@ File.open(file_input, "r") do |fin|
 	#忽略身份证号不存在记录
 		next unless output_hash["old_id"].kind_of? String
 		output_hash["user_report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-		output_hash["contactDetail"] = Array.new
-		transfer_list_with_item(input_hash["l_base_info_history"],
-			output_hash["contactDetail"], "l_contacts")
-#写入es
-	out_body = gen_store_doc_bodies(gen_body(INDEX,TYPE,output_hash),  BODY_QUEUE, 2000)
-	ES_DB.bulk_push(out_body) if out_body.is_a? Array
+		next unless  input_hash["l_base_info_history"].is_a? Array and input_hash["l_base_info_history"].size > 0
+		input_hash["l_base_info_history"].each do |item|
+			#next unless  item.is_a? Array and item.size > 0
+			output_hash["contactDetail"] = item["l_contacts"]
+			output_hash["update_time"] = date2int(item["t_base_upd_tm"])
+			#写入es
+			out_body = gen_store_doc_bodies(gen_body(INDEX,TYPE,output_hash),  BODY_QUEUE, 2000)
+			ES_DB.bulk_push(out_body) if out_body.is_a? Array
+		end		
 	end
 	if BODY_QUEUE.size > 0
 		out_body = gen_remain_store_bodies(BODY_QUEUE)
