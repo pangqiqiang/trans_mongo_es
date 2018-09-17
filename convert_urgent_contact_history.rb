@@ -8,7 +8,7 @@ require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
 
-file_input = "/tmp/urgent_contact_report_history.json"
+file_input = "urgent_contact_report_history.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 INDEX = "urgent_contact_report_history"
@@ -17,16 +17,19 @@ BODY_QUEUE = []
 
 File.open(file_input, "r") do |fin|
 	fin.each do |line|
-		output_hash = Hash.new
+		#output_hash = Hash.new
 		line.chomp!
 		input_hash = JSON.parse(line)
-		output_hash["old_id"] = input_hash["_id"]
+		old_id = input_hash["_id"]
 	#忽略身份证号不存在记录
-		next unless output_hash["old_id"].kind_of? String
-		output_hash["user_report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
+		next unless input_hash["_id"].kind_of? String
+		user_report_id = SQLDB.fetch_from_id(old_id)
 		next unless  input_hash["l_base_info_history"].is_a? Array and input_hash["l_base_info_history"].size > 0
-		input_hash["l_base_info_history"].each do |item|
+		input_hash["l_base_info_history"].each_with_index do |item|
 			#next unless  item.is_a? Array and item.size > 0
+			output_hash = Hash.new
+			output_hash["old_id"] = old_id
+			output_hash["user_report_id"] = user_report_id
 			output_hash["contactDetail"] = item["l_contacts"]
 			output_hash["update_time"] = date2int(item["t_base_upd_tm"])
 			#写入es
