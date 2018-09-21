@@ -94,8 +94,8 @@ do_each_row = Proc.new do |fin, line|
 	rename_hash_item(hash_link(input_hash, ["c_gjj_info", "task_data", "base_info"]),output_hash["gjj_base_info"],
 	 %w<cert_type begin_date last_pay_date pay_status balance cust_no pay_status_desc cert_no corp_name name>)
 #时间格式不统一做兼容处理,es
-	output_hash["gjj_base_info"]["begin_date"] = date2int(output_hash["gjj_base_info"]["begin_date"])
-	output_hash["gjj_base_info"]["last_pay_date"] = date2int(output_hash["gjj_base_info"]["last_pay_date"])
+	output_hash["gjj_base_info"]["begin_date"] = date_compat(output_hash["gjj_base_info"]["begin_date"])
+	output_hash["gjj_base_info"]["last_pay_date"] = date_compat(output_hash["gjj_base_info"]["last_pay_date"])
 
 
 #开始shebao_base_info
