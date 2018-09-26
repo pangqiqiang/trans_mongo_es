@@ -9,7 +9,7 @@ require './es_handler'
 
 Encoding.default_external=Encoding.find("utf-8")
 
-file_input = "/tmp/t_face_verify.txt"
+file_input = "t_face_verify.txt"
 INDEX = "face_verify"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")

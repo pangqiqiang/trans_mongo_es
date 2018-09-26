@@ -9,7 +9,7 @@ require './mongo_handler'
 require './sqlite_treat'
 require './es_handler'
 
-file_input = "/tmp/mobile_bill_report.json"
+file_input = "mobile_bill_report.json"
 INDEX = "mobile_bill_report"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")

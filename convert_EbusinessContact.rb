@@ -8,7 +8,7 @@ require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
 
-file_input = "/tmp/EbusinessContact.json"
+file_input = "EbusinessContact.json"
 INDEX = "ebusiness_contact_report"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")

@@ -8,7 +8,7 @@ require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
 
-file_input = "/tmp/urgent_contact_report.json"
+file_input = "urgent_contact_report.json"
 SQLDB = MyDB.new("ids.db", "id_pairs")
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
 INDEX = "urgent_contact_report"

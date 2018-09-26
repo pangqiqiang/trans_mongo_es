@@ -8,7 +8,7 @@ require './common_funcs'
 require './sqlite_treat'
 require './es_handler'
 
-file_input = "/tmp/location_info_history.json"
+file_input = "location_info_history.json"
 INDEX = "location_info_history"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")

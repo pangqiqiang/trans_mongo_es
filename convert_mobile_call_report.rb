@@ -42,15 +42,15 @@ def gen_thr(filename, body_queue)
 	end
 end
 
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_000", body_queue0)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_001", body_queue1)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_002", body_queue2)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_003", body_queue3)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_004", body_queue4)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_005", body_queue5)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_006", body_queue6)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_007", body_queue7)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_008", body_queue8)}
-threads << Thread.new { gen_thr("/home/work/mobile_call_report_009", body_queue9)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_000", body_queue0)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_001", body_queue1)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_002", body_queue2)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_003", body_queue3)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_004", body_queue4)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_005", body_queue5)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_006", body_queue6)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_007", body_queue7)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_008", body_queue8)}
+threads << Thread.new { gen_thr("/home/mobile_call_report_009", body_queue9)}
 
 threads.map(&:join)
