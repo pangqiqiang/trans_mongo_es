@@ -32,7 +32,7 @@ def gen_thr(filename, body_queue)
 			output_hash["report_detail_list"] = input_hash["l_report_contact_list"]
 			output_hash["update_time"] = Time.now.to_i
 	#写入es
-	out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  body_queue, 200)
+	out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  body_queue, 300)
 			ES_DB.bulk_push(out_body) if out_body.is_a? Array
 		end
 		if body_queue.size > 0
@@ -42,15 +42,15 @@ def gen_thr(filename, body_queue)
 	end
 end
 
-threads << Thread.new { gen_thr("/home/mobile_call_report_000", body_queue0)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_001", body_queue1)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_002", body_queue2)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_003", body_queue3)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_004", body_queue4)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_005", body_queue5)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_006", body_queue6)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_007", body_queue7)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_008", body_queue8)}
-threads << Thread.new { gen_thr("/home/mobile_call_report_009", body_queue9)}
+threads << Thread.new { gen_thr("mobile_call_report_000", body_queue0)}
+threads << Thread.new { gen_thr("mobile_call_report_001", body_queue1)}
+threads << Thread.new { gen_thr("mobile_call_report_002", body_queue2)}
+threads << Thread.new { gen_thr("mobile_call_report_003", body_queue3)}
+threads << Thread.new { gen_thr("mobile_call_report_004", body_queue4)}
+threads << Thread.new { gen_thr("mobile_call_report_005", body_queue5)}
+threads << Thread.new { gen_thr("mobile_call_report_006", body_queue6)}
+threads << Thread.new { gen_thr("mobile_call_report_007", body_queue7)}
+threads << Thread.new { gen_thr("mobile_call_report_008", body_queue8)}
+threads << Thread.new { gen_thr("mobile_call_report_009", body_queue9)}
 
 threads.map(&:join)
