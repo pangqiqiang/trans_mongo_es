@@ -11,29 +11,32 @@ require './mysql_deal'
 require 'thread'
 
 
+
 INDEX = "user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
-MSQLDB0 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB0 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB1 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB1 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB2 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB2 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB3 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB3 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB4 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB4 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB5 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB5 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB6 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB6 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB7 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB7 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB8 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB8 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
-MSQLDB9 = Mysql_DB.new("10.111.30.178", 3306, "dev", "KRkFcVCbopZbS8R7", "jjd",  "user_passport")
-FACEDB9 = Mysql_DB.new("10.111.33.181", 3306, "mysqltords", "TeNSXaGXbMz8eY86", "jjd",  "t_face_verify")
+DB_PASS = {host:"rm-2zeoc1o61ykfe62v6.mysql.rds.aliyuncs.com", port:3307, user:"dev", 
+			pass:"KRkFcVCbopZbS8R7", database:"jjd", table: "user_passport"}
+DB_FACE = {host:"10.111.33.181", port:3306, user:"mysqltords", pass:"TeNSXaGXbMz8eY86", database:"jjd", table: "t_face_verif"}
+
+MSQLDB0 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB0 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB1 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB1 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB2 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB2 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB3 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB3 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB4 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB4 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB5 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB5 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB6 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB6 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB7 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB8 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB9 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB9 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
 
 SQLDB.create_index
 ES_DB = ELS.new("10.111.30.171:9200", "10.111.30.172:9200", "10.111.30.173:9200")
