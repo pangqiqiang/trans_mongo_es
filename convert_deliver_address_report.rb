@@ -52,7 +52,7 @@ do_each_row = Proc.new do |fin, line|
 		output_hash["deliver_addresse_list"] << temp_hash
 	end
 # 增加字段识别jjd和第一风控
-	out_hash["system_name"] = "JJD"
+	output_hash["system_name"] = "JJD"
 
 #写入es
 	out_body = out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 1000)

@@ -28,7 +28,7 @@ File.open(file_input, "r") do |fin|
 		output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 		output_hash["shebao_data"] = input_hash["c_shebao_info"].to_json
 		# 增加字段识别jjd和第一风控
-		out_hash["system_name"] = "JJD"
+		output_hash["system_name"] = "JJD"
 		#写入es
 		out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array

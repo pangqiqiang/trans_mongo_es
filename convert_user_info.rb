@@ -134,7 +134,7 @@ do_each_row = Proc.new do |line, body_queue, sql_queue,face_db,user_db|
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
 	# 增加字段识别jjd和第一风控
-	out_hash["system_name"] = "JJD"
+	output_hash["system_name"] = "JJD"
 	
 	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 3000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array

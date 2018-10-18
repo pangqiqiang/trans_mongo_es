@@ -32,7 +32,7 @@ File.open(file_input, "r") do |fin|
 		output_hash["report_bill_list"].map{|item| item["total_amt"] *=100 if item["total_amt"]}
 		output_hash["update_time"] = Time.now.to_i
 # 增加字段识别jjd和第一风控
-		out_hash["system_name"] = "JJD"
+		output_hash["system_name"] = "JJD"
 #写入es
 		out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 2000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
