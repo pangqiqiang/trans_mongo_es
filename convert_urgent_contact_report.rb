@@ -20,11 +20,11 @@ do_each_row = Proc.new do |fin, line|
 	line.chomp!
 	input_hash = JSON.parse(line)
 	output_hash["old_id"] = input_hash["_id"]
-#忽略身份证号不存在记录
+	#忽略身份证号不存在记录
 	next unless output_hash["old_id"].kind_of? String
-#获取report_id
+	#获取report_id
 	output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
-#开始contactDetail
+	#开始contactDetail
 	output_hash["contactDetail"] = Hash.new
 		if input_hash["l_report_base_contract"].is_a?(Array)
 		output_hash["contactDetail"] = Array.new
@@ -42,7 +42,9 @@ do_each_row = Proc.new do |fin, line|
 			output_hash["contactDetail"] << temp_hash
 		end
 	end
-#写入es
+	# 增加字段识别jjd和第一风控
+	out_hash["system_name"] = "JJD"
+	#写入es
 	out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 2000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end

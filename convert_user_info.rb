@@ -15,9 +15,9 @@ require 'thread'
 INDEX = "user_info"
 TYPE = "credit_data"
 SQLDB = MyDB.new("ids.db", "id_pairs")
-DB_PASS = {host:"rm-2zeoc1o61ykfe62v6.mysql.rds.aliyuncs.com", port:3307, user:"dev", 
+DB_PASS = {host:"rm-2zeoc1o61ykfe62v6.mysql.rds.aliyuncs.com", port:3306, user:"dev", 
 			pass:"KRkFcVCbopZbS8R7", database:"jjd", table: "user_passport"}
-DB_FACE = {host:"10.111.33.181", port:3306, user:"mysqltords", pass:"TeNSXaGXbMz8eY86", database:"jjd", table: "t_face_verif"}
+DB_FACE = {host:"10.111.33.181", port:3306, user:"mysqltords", pass:"TeNSXaGXbMz8eY86", database:"jjd", table: "t_face_verify"}
 
 MSQLDB0 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
 FACEDB0 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
@@ -34,6 +34,8 @@ FACEDB5 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:
 MSQLDB6 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
 FACEDB6 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
 MSQLDB7 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
+FACEDB7 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
+MSQLDB8 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
 FACEDB8 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
 MSQLDB9 = Mysql_DB.new(DB_PASS[:host], DB_PASS[:port], DB_PASS[:user], DB_PASS[:pass], DB_PASS[:database], DB_PASS[:table])
 FACEDB9 = Mysql_DB.new(DB_FACE[:host], DB_FACE[:port], DB_FACE[:user], DB_FACE[:pass], DB_FACE[:database], DB_FACE[:table])
@@ -131,6 +133,9 @@ do_each_row = Proc.new do |line, body_queue, sql_queue,face_db,user_db|
 	output_hash["location_credit_status"] = bool2int(hash_link(input_hash, ["c_base_info","b_location_info"]),
 		output_hash["location_upd_tm"])
 	output_hash["update_time"] = Time.now.to_i
+	# 增加字段识别jjd和第一风控
+	out_hash["system_name"] = "JJD"
+	
 	out_body = gen_update_doc_bodies(INDEX, TYPE, output_hash, body_queue, "report_id", 3000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
 end

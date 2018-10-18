@@ -31,6 +31,8 @@ def gen_thr(filename, body_queue)
 			output_hash["report_id"] = SQLDB.fetch_from_id(output_hash["old_id"])
 			output_hash["report_detail_list"] = input_hash["l_report_contact_list"]
 			output_hash["update_time"] = Time.now.to_i
+			# 增加字段识别jjd和第一风控
+			out_hash["system_name"] = "JJD"
 	#写入es
 	out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  body_queue, 300)
 			ES_DB.bulk_push(out_body) if out_body.is_a? Array

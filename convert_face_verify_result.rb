@@ -27,6 +27,9 @@ File.open(file_input) do |fin|
 		temp["live_result"] = row[1]
 		temp["card_verify_result"] = row[2]
 		temp["compare_result"] = row[3]
+		#标志jjd数据来源
+		temp["system_name"] = "JJD"
+#写入es		
 		out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, temp["report_id"],temp), BODY_QUEUE, 1000)
 		ES_DB.bulk_push(out_body) if out_body.is_a? Array
 	end

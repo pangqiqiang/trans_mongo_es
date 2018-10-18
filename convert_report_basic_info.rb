@@ -120,6 +120,8 @@ do_each_row = Proc.new do |fin, line|
 	%w<cell_phone idcard reg_time real_name>)
 	output_hash["mobile_basic_info"]["reg_time"] = date_compat(output_hash["mobile_basic_info"]["reg_time"])
 	output_hash["mobile_basic_info"]["update_time"] = date2int(hash_link(user_data, ["c_mobile_basic", "update_time"]))
+	# 增加字段识别jjd和第一风控
+	out_hash["system_name"] = "JJD"
 #写入es
 	out_body = gen_store_doc_bodies(gen_id_body(INDEX, TYPE, output_hash["report_id"],output_hash),  BODY_QUEUE, 2000)
 	ES_DB.bulk_push(out_body) if out_body.is_a? Array
